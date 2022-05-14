@@ -22,7 +22,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     public Page<ClienteResponse> listaClientes(Pageable pageable) {
-        return clienteRepository.findAll(pageable);
+        return clienteRepository.findAll(pageable).map(ClienteResponse::converte);
     }
 
     public ClienteResponse obterPorId(String id) {
@@ -42,10 +42,6 @@ public class ClienteServiceImpl implements ClienteService {
     public ClienteResponse deletacliente(String id) {
         Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
         return ClienteResponse.converte((cliente));
-    }
-
-    private Cliente obterPorCpf(ClienteRequest clienteRequest) {
-        return clienteRepository.findByCpf(clienteRequest.getCpf());
     }
 
 }
