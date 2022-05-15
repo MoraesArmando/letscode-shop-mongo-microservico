@@ -28,12 +28,12 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ClienteResponse obterPorId(@RequestParam(name = "id") String id) {
+    public ClienteResponse obterPorId(@PathVariable String id) {
         return clienteServiceImpl.obterPorId(id);
     }
 
-    @GetMapping("/{cpf}")
-    public ClienteResponse obterPorCpf(@RequestParam(name = "cpf")String cpf){
+    @GetMapping("/")
+    public ClienteResponse obterPorCpf(@RequestParam(name = "cpf") String cpf){
         return clienteServiceImpl.obterPorCpf(cpf);
     }
 
@@ -42,7 +42,7 @@ public class ClienteController {
         return clienteServiceImpl.atualizaCliente(clienteRequest);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     public ClienteResponse deletaCliete(@RequestParam(name = "id") String id) {
         return clienteServiceImpl.deletacliente(id);
     }

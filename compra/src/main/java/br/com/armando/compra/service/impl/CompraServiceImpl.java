@@ -34,7 +34,7 @@ public class CompraServiceImpl implements CompraService {
 
     @Override
     public Page<CompraResponse> listaCpfPage(String cpf, Pageable pageable) {
-        return compraRepository.findByCpf(cpf, pageable);
+        return compraRepository.findByCpf(cpf, pageable).map(CompraResponse::convert);
     }
 
     @Override

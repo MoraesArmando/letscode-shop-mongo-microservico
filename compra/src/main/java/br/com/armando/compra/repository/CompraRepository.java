@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CompraRepository extends MongoRepository<Compra, String> {
-    Page<CompraResponse> findByCpf(String cpf, Pageable pageable);
+    Page<Compra> findByCpf(String cpf, Pageable pageable);
 }
