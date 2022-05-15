@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ProdutoServiceImpl implements ProdutoService {
@@ -29,7 +31,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public ProdutoResponse obterPorCodigo(String codigo) {
-        return ProdutoResponse.converte(produtoRepository.findByCodigo(codigo));
+        return ProdutoResponse.converte(produtoRepository.findByCodigo(codigo).orElseThrow(()->new RuntimeException("Produto não encontrado")));
     }
 
     @Override
