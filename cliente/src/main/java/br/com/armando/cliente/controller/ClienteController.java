@@ -32,6 +32,11 @@ public class ClienteController {
         return clienteServiceImpl.obterPorId(id);
     }
 
+    @GetMapping("/{cpf}")
+    public ClienteResponse obterPorCpf(@RequestParam(name = "cpf")String cpf){
+        return clienteServiceImpl.obterPorCpf(cpf);
+    }
+
     @PutMapping
     public ClienteResponse atualizaCliente(@RequestBody ClienteRequest clienteRequest) {
         return clienteServiceImpl.atualizaCliente(clienteRequest);

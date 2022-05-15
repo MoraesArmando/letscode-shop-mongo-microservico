@@ -46,4 +46,9 @@ public class ClienteServiceImpl implements ClienteService {
         return ClienteResponse.converte((cliente));
     }
 
+    @Override
+    public ClienteResponse obterPorCpf(String cpf) {
+        return ClienteResponse.converte(clienteRepository.findByCpf(cpf));
+    }
+
 }

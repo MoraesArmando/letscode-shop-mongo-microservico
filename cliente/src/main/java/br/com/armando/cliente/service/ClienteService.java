@@ -16,4 +16,6 @@ public interface ClienteService {
    ClienteResponse atualizaCliente(ClienteRequest clienteRequest);
 
    ClienteResponse deletacliente(String id);
+
+    ClienteResponse obterPorCpf(String cpf);
 }
