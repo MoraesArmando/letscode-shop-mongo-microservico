@@ -7,12 +7,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 public class ClienteServiceImpl {
 
-    public static ClienteResponse getClient(String identifier) {
-        WebClient client = WebClient.create("http://localhost:8082");
+    public ClienteResponse getClient(String identifier) {
+        WebClient client = WebClient.create("http://localhost:8081");
 
-        return client
+        return (ClienteResponse) client
                 .get()
-                .uri("/cliente/{identifier}", identifier)
+                .uri("/cliente?cpf={identifier}", identifier)
                 .retrieve()
                 .bodyToMono(ClienteResponse.class)
                 .block();

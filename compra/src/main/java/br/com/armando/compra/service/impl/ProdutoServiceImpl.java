@@ -1,18 +1,18 @@
 package br.com.armando.compra.service.impl;
 
-import br.com.armando.compra.dto.ClienteResponse;
+import br.com.armando.compra.dto.ProdutoResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class ProdutoServiceImpl {
 
-    public static ProdutoResponse getClient(String identifier) {
-        WebClient client = WebClient.create("http://localhost:8082");
+    public ProdutoResponse getProduto(String identifier) {
+        WebClient produto = WebClient.create("http://localhost:8082");
 
-        return client
+        return (ProdutoResponse) produto
                 .get()
-                .uri("/produto/{identifier}", identifier)
+                .uri("/produto?codigo={identifier}", identifier)
                 .retrieve()
                 .bodyToMono(ProdutoResponse.class)
                 .block();

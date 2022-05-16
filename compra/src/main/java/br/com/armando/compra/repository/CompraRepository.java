@@ -1,6 +1,5 @@
 package br.com.armando.compra.repository;
 
-import br.com.armando.compra.dto.CompraResponse;
 import br.com.armando.compra.model.Compra;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

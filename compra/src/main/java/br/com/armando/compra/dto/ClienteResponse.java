@@ -1,6 +1,5 @@
 package br.com.armando.compra.dto;
 
-import br.com.armando.cliente.model.Cliente;
 import lombok.*;
 
 @Getter

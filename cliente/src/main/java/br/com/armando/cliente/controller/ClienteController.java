@@ -27,13 +27,13 @@ public class ClienteController {
         return clienteServiceImpl.listaClientes(pageable);
     }
 
-    @GetMapping("/{id}")
-    public ClienteResponse obterPorId(@PathVariable String id) {
+    @GetMapping("/")
+    public ClienteResponse obterPorId(@RequestParam(name = "id") String id) {
         return clienteServiceImpl.obterPorId(id);
     }
 
-    @GetMapping("/")
-    public ClienteResponse obterPorCpf(@RequestParam(name = "cpf") String cpf){
+    @GetMapping("/{cpf}")
+    public ClienteResponse obterPorCpf(@PathVariable String cpf) {
         return clienteServiceImpl.obterPorCpf(cpf);
     }
 

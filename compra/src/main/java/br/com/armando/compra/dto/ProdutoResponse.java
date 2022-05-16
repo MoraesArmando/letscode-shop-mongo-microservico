@@ -1,6 +1,5 @@
 package br.com.armando.compra.dto;
 
-import br.com.armando.produto.model.Produto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

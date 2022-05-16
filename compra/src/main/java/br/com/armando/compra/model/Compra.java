@@ -19,9 +19,9 @@ public class Compra {
 
     @Id
     private String id;
+    private String cpf;
     private LocalDateTime dataCompra;
     private Float valorTotal;
-    private String cpf;
 
     private List<ProdutoCompra> produtoCompra;
 
