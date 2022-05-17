@@ -9,9 +9,9 @@ import br.com.armando.compra.model.ProdutoCompra;
 import br.com.armando.compra.repository.CompraRepository;
 import br.com.armando.compra.service.CompraService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +25,7 @@ public class CompraServiceImpl implements CompraService {
     private final SendKafkaMessageImpl sendKafkaMessage;
 
     @Override
-    public CompraResponse criarCompra(CompraRequest compraRequest) {
+    public Mono<CompraResponse> criarCompra(CompraRequest compraRequest) {
         ClienteResponse clienteResponse = clienteService.getClient(compraRequest.getCpf());
         Compra compra = Compra.builder()
                 .cpf(clienteResponse.getCpf())
@@ -35,16 +35,14 @@ public class CompraServiceImpl implements CompraService {
                 .produtoCompra(compraRequest.getProdutoCompra())
                 .build();
 
-        compraRepository.save(compra);
-        CompraResponse compraResponse = CompraResponse.convert(compra);
-        sendKafkaMessage.sendMenssage(compraResponse);
-        return compraResponse;
+        Mono<Compra> compraMono = compraRepository.insert(compra);
+//        sendKafkaMessage.sendMenssage(compraMono.map(CompraResponse::convert));
+        return compraMono.map(CompraResponse::convert);
     }
 
     private Float calculaValorProduto(CompraRequest compraRequest) {
         float valorTotal = 0;
-        for (ProdutoCompra p :
-                compraRequest.getProdutoCompra()) {
+        for (ProdutoCompra p : compraRequest.getProdutoCompra()) {
             ProdutoResponse produtoResponse = produtoService.getProduto(p.getCodigoProduto());
             valorTotal += produtoResponse.getPreco() * p.getQuantidade();
         }
@@ -52,12 +50,12 @@ public class CompraServiceImpl implements CompraService {
     }
 
     @Override
-    public Page<CompraResponse> listaCpfPage(String cpf, Pageable pageable) {
-        return compraRepository.findByCpf(cpf, pageable).map(CompraResponse::convert);
+    public Mono<CompraResponse> listaCpfPage(String cpf) {
+        return compraRepository.findByCpf(cpf).map(CompraResponse::convert);
     }
 
     @Override
-    public Page<CompraResponse> listaTodasCompras(Pageable pageable) {
-        return compraRepository.findAll(pageable).map(CompraResponse::convert);
+    public Flux<CompraResponse> listaTodasCompras() {
+        return compraRepository.findAll().map(CompraResponse::convert);
     }
 }

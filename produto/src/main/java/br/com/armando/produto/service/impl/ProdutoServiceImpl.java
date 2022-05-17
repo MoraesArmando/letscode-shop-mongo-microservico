@@ -6,9 +6,9 @@ import br.com.armando.produto.model.Produto;
 import br.com.armando.produto.repository.ProdutoRepository;
 import br.com.armando.produto.service.ProdutoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -17,24 +17,19 @@ public class ProdutoServiceImpl implements ProdutoService {
     private final ProdutoRepository produtoRepository;
 
     @Override
-    public Page<ProdutoResponse> listaProdutos(Pageable pageable) {
-        return produtoRepository.findAll(pageable).map(ProdutoResponse::converte);
+    public Flux<ProdutoResponse> listaProdutos() {
+        return produtoRepository.findAll().map(ProdutoResponse::converte);
     }
 
     @Override
-    public ProdutoResponse criaProduto(ProdutoRequest produtoRequest) {
+    public Mono<ProdutoResponse> criaProduto(ProdutoRequest produtoRequest) {
         Produto produto = Produto.converteRequest(produtoRequest);
-        return ProdutoResponse.converte(produtoRepository.save(produto));
+        return produtoRepository.insert(produto).map(ProdutoResponse::converte);
     }
 
     @Override
-    public ProdutoResponse obterPorCodigo(String codigo) {
-        return ProdutoResponse.converte(produtoRepository.findByCodigo(codigo).orElseThrow(()->new RuntimeException("Produto não encontrado")));
+    public Mono<ProdutoResponse> obterPorCodigo(String codigo) {
+        return produtoRepository.findByCodigo(codigo).map(ProdutoResponse::converte);
     }
 
-    @Override
-    public void deleteProduto(String codigo) {
-        Produto produto = Produto.converteResponse(obterPorCodigo(codigo));
-        produtoRepository.delete(produto);
-    }
 }

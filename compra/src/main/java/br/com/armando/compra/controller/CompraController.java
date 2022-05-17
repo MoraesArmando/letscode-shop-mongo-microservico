@@ -4,10 +4,9 @@ import br.com.armando.compra.dto.CompraRequest;
 import br.com.armando.compra.dto.CompraResponse;
 import br.com.armando.compra.service.impl.CompraServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,17 +16,17 @@ public class CompraController {
     private final CompraServiceImpl compraService;
 
     @GetMapping
-    public Page<CompraResponse> listaCompras(@PageableDefault Pageable pageable){
-        return compraService.listaTodasCompras(pageable);
+    public Flux<CompraResponse> listaCompras(){
+        return compraService.listaTodasCompras();
     }
 
     @GetMapping("/")
-    public Page<CompraResponse> obterPorCpf(@RequestParam(name = "cpf") String cpf, @PageableDefault Pageable pageable){
-        return compraService.listaCpfPage(cpf, pageable);
+    public Mono<CompraResponse> obterPorCpf(@RequestParam(name = "cpf") String cpf){
+        return compraService.listaCpfPage(cpf);
     }
 
     @PostMapping
-    public CompraResponse criaCompra(@RequestBody CompraRequest compraRequest){
+    public Mono<CompraResponse> criaCompra(@RequestBody CompraRequest compraRequest){
         return compraService.criarCompra(compraRequest);
     }
 

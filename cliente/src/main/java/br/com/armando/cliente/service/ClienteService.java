@@ -2,20 +2,17 @@ package br.com.armando.cliente.service;
 
 import br.com.armando.cliente.dto.ClienteRequest;
 import br.com.armando.cliente.dto.ClienteResponse;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface ClienteService {
 
-   ClienteResponse criaCliente(ClienteRequest clienteRquest);
+   Mono<ClienteResponse> criaCliente(ClienteRequest clienteRquest);
 
-   Page<ClienteResponse> listaClientes(Pageable pageable);
+   Flux<ClienteResponse> listaClientes();
 
-   ClienteResponse obterPorId(String id);
+   Mono<ClienteResponse> obterPorId(String id);
 
-   ClienteResponse atualizaCliente(ClienteRequest clienteRequest);
-
-   ClienteResponse deletacliente(String id);
-
-    ClienteResponse obterPorCpf(String cpf);
+    Mono<ClienteResponse> obterPorCpf(String cpf);
 }

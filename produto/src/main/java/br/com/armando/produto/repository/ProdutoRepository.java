@@ -1,15 +1,12 @@
 package br.com.armando.produto.repository;
 
-import br.com.armando.produto.dto.ProdutoResponse;
 import br.com.armando.produto.model.Produto;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
+import reactor.core.publisher.Mono;
 
 @Repository
-public interface ProdutoRepository extends MongoRepository<Produto, String> {
+public interface ProdutoRepository extends ReactiveMongoRepository<Produto, String> {
 
-
-    Optional<Produto> findByCodigo(String codigo);
+    Mono<Produto> findByCodigo(String codigo);
 }
