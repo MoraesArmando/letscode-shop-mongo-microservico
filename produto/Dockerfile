@@ -1,6 +1,9 @@
 FROM amazoncorretto:11-alpine
 
-COPY target/produto-0.0.1-SNAPSHOT.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+ARG JAR_FILE=target/*.jar
 
-EXPOSE 8082
+COPY ${JAR_FILE} app.jar
+
+EXPOSE 8081
+
+ENTRYPOINT ["java","-jar","/app.jar"]

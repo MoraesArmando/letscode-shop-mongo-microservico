@@ -1,6 +1,6 @@
-package br.com.armando.compra.service.impl;
+package br.com.armando.compravalidator.service;
 
-import br.com.armando.compra.dto.CompraResponse;
+import br.com.armando.compravalidator.dto.CompraResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

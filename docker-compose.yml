@@ -1,59 +1,89 @@
-version: '3'
-
-volumes:
-  postgres_data:
-      driver: local
-
+version: "3"
 services:
-  postgres:
-      image: postgres
-      volumes:
-        - postgres_data:/var/lib/postgresql/data
-      environment:
-        POSTGRES_DB: keycloak
-        POSTGRES_USER: keycloak
-        POSTGRES_PASSWORD: password
-  keycloak:
-      image: quay.io/keycloak/keycloak:legacy
-      environment:
-        DB_VENDOR: POSTGRES
-        DB_ADDR: postgres
-        DB_DATABASE: keycloak
-        DB_USER: keycloak
-        DB_SCHEMA: public
-        DB_PASSWORD: password
-        KEYCLOAK_USER: admin
-        KEYCLOAK_PASSWORD: Pa55w0rd
-
-      ports:
-        - 8080:8080
-      depends_on:
-        - postgres
-
-    compra-api:
-    image: docker.io/letscode/flux-server:latest
-    ports:
-      - "8381:8080"
-    networks:
-      - letscode-flux
-    depends_on:
-      - mongo-compra
-    environment:
-      - SPRING_DATA_MONGODB_HOST=mongo-compra
-      - SPRING_DATA_MONGODB_PORT=27017
-      - SPRING_DATASOURCE_PASSWORD=root
-      - SERVER_PORT=8080
-
-
 
   mongo-banco:
     image: mongo:4
     networks:
-      - letscode-flux
+      - shop-commerce
     restart: always
     ports:
       - "27017:27017"
 
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    networks:
+      - shop-commerce
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+
+  kafka:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: kafka
+    networks:
+      - shop-commerce
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_INTERNAL://localhost:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+
+  user-service:
+    image: user:1.0
+    ports:
+      - "8083:8083"
+    networks:
+      - shop-commerce
+    environment:
+      - SPRING_DATA_MONGODB_HOST=mongo-banco
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SERVER_PORT=8080
+
+  produto-service:
+    image: produto:1.0
+    ports:
+      - "8081:8081"
+    networks:
+      - shop-commerce
+    depends_on:
+      - user-service
+    environment:
+      - SPRING_DATA_MONGODB_HOST=mongo-banco
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SERVER_PORT=8080
+      
+
+  compra-service:
+    image: compra:1.0
+    ports:
+      - "8082:8082"
+    networks:
+      - shop-commerce
+    depends_on:
+      - user-service
+      - produto-service
+      - kafka
+    environment:
+      - SPRING_DATA_MONGODB_HOST=mongo-banco
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SERVER_PORT=8080
+      - KAFKA_ADDRESS=kafka:9092
+
+
 networks:
-  letscode-flux:
+  shop-commerce:
+    driver: bridge

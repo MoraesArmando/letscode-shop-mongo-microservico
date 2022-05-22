@@ -24,6 +24,8 @@ public class CompraServiceImpl implements CompraService {
     @Override
     public Mono<CompraResponse> criarCompra(CompraRequest compraRequest) {
 
+//      ClienteResponse clienteResponse = clienteService.getCliente(compraRequest.getCpf());
+
         Compra compra = Compra.builder()
                 .cpf(compraRequest.getCpf())
                 .dataCompra(LocalDateTime.now())
@@ -32,6 +34,7 @@ public class CompraServiceImpl implements CompraService {
                 .produtoCompra(compraRequest.getProdutoCompra())
                 .build();
 
+        sendKafkaMessage.sendMenssage(CompraResponse.convert(compra));
         return compraRepository.save(compra).map(CompraResponse::convert);
     }
 
