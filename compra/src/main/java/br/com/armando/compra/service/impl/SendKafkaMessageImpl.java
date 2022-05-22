@@ -15,6 +15,7 @@ public class SendKafkaMessageImpl {
     private final KafkaTemplate<String, CompraResponse> kafkaTemplate;
 
     public void sendMenssage(CompraResponse compraResponse){
+
         kafkaTemplate.send(KAFKA_TOPIC,compraResponse);
     }
 }

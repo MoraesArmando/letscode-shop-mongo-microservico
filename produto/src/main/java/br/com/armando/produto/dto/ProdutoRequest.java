@@ -11,14 +11,12 @@ import lombok.Setter;
 public class ProdutoRequest {
 
     private String codigo;
-    private String nome;
     private Float preco;
     private Integer quantidade;
 
     public  static  ProdutoRequest converte(Produto produto){
         return ProdutoRequest.builder()
                 .codigo(produto.getCodigo())
-                .nome(produto.getNome())
                 .preco(produto.getPreco())
                 .quantidade(produto.getQuantidade())
                 .build();

@@ -22,6 +22,7 @@ public class Compra {
     private String cpf;
     private LocalDateTime dataCompra;
     private Float valorTotal;
+    private String status;
 
     private List<ProdutoCompra> produtoCompra;
 
@@ -38,6 +39,7 @@ public class Compra {
                 .cpf(compraResponse.getCpf())
                 .dataCompra(compraResponse.getDataCompra())
                 .valorTotal(compraResponse.getValorTotal())
+                .status(compraResponse.getStatus())
                 .produtoCompra(compraResponse.getProdutoCompra())
                 .build();
     }

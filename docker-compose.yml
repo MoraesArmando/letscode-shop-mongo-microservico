@@ -1,6 +1,36 @@
-version: "3"
+version: '3'
+
+volumes:
+  postgres_data:
+      driver: local
+
 services:
-  compra-api:
+  postgres:
+      image: postgres
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: keycloak
+        POSTGRES_PASSWORD: password
+  keycloak:
+      image: quay.io/keycloak/keycloak:legacy
+      environment:
+        DB_VENDOR: POSTGRES
+        DB_ADDR: postgres
+        DB_DATABASE: keycloak
+        DB_USER: keycloak
+        DB_SCHEMA: public
+        DB_PASSWORD: password
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: Pa55w0rd
+
+      ports:
+        - 8080:8080
+      depends_on:
+        - postgres
+
+    compra-api:
     image: docker.io/letscode/flux-server:latest
     ports:
       - "8381:8080"
@@ -13,10 +43,6 @@ services:
       - SPRING_DATA_MONGODB_PORT=27017
       - SPRING_DATASOURCE_PASSWORD=root
       - SERVER_PORT=8080
-
-
-
-
 
 
 

@@ -17,7 +17,7 @@ public class CompraResponse {
     private String cpf;
     private LocalDateTime dataCompra;
     private Float valorTotal;
-
+    private String status;
     private List<ProdutoCompra> produtoCompra;
 
     public static CompraResponse convert(Compra compra){
@@ -26,6 +26,7 @@ public class CompraResponse {
                 .dataCompra(compra.getDataCompra())
                 .valorTotal(compra.getValorTotal())
                 .produtoCompra(compra.getProdutoCompra())
+                .status(compra.getStatus())
                 .build();
     }
 }

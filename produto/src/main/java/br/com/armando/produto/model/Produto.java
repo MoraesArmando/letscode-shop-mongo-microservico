@@ -17,14 +17,12 @@ public class Produto {
     @Id
     private String id;
     private String codigo;
-    private String nome;
     private Float preco;
     private Integer quantidade;
 
     public static Produto converteRequest(ProdutoRequest produtoRequest){
         return Produto.builder()
                 .codigo(produtoRequest.getCodigo())
-                .nome(produtoRequest.getNome())
                 .preco(produtoRequest.getPreco())
                 .quantidade(produtoRequest.getQuantidade())
                 .build();
@@ -33,7 +31,6 @@ public class Produto {
     public static Produto converteResponse(ProdutoResponse produtoResponse){
         return Produto.builder()
                 .codigo(produtoResponse.getCodigo())
-                .nome(produtoResponse.getNome())
                 .preco(produtoResponse.getPreco())
                 .quantidade(produtoResponse.getQuantidade())
                 .build();
