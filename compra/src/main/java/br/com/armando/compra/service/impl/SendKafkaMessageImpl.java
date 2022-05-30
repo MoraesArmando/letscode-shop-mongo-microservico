@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 public class SendKafkaMessageImpl {
 
     public static final String KAFKA_TOPIC = "COMPRA_TOPICO";
-
     private final KafkaTemplate<String, CompraResponse> kafkaTemplate;
 
     public void sendMenssage(CompraResponse compraResponse){
