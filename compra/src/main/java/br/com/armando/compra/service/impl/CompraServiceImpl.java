@@ -25,7 +25,6 @@ public class CompraServiceImpl implements CompraService {
     @Override
     public Mono<CompraResponse> criarCompra(CompraRequest compraRequest) {
 
-//      Mono<ClienteResponse> clienteResponse = clienteService.getCliente(compraRequest.getCpf());
 
         Compra compra = Compra.builder()
                 .cpf(compraRequest.getCpf())
@@ -45,7 +44,7 @@ public class CompraServiceImpl implements CompraService {
     }
 
     @Override
-    public Flux<CompraResponse> listaTodasCompras( ) {
+    public Flux<CompraResponse> listaTodasCompras() {
         return compraRepository.findAll().map(CompraResponse::convert);
     }
 
