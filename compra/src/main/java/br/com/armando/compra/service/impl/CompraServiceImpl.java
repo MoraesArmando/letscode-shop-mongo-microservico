@@ -1,5 +1,6 @@
 package br.com.armando.compra.service.impl;
 
+import br.com.armando.compra.dto.ClienteResponse;
 import br.com.armando.compra.dto.CompraRequest;
 import br.com.armando.compra.dto.CompraResponse;
 import br.com.armando.compra.model.Compra;
@@ -24,7 +25,7 @@ public class CompraServiceImpl implements CompraService {
     @Override
     public Mono<CompraResponse> criarCompra(CompraRequest compraRequest) {
 
-//      ClienteResponse clienteResponse = clienteService.getCliente(compraRequest.getCpf());
+//      Mono<ClienteResponse> clienteResponse = clienteService.getCliente(compraRequest.getCpf());
 
         Compra compra = Compra.builder()
                 .cpf(compraRequest.getCpf())
@@ -44,9 +45,8 @@ public class CompraServiceImpl implements CompraService {
     }
 
     @Override
-    public Flux<Compra> listaTodasCompras( ) {
-        return compraRepository.findAll();
-
+    public Flux<CompraResponse> listaTodasCompras( ) {
+        return compraRepository.findAll().map(CompraResponse::convert);
     }
 
 }

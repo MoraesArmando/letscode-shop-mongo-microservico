@@ -8,7 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ClienteResponse{
+public class
+ClienteResponse{
 
     private String username;
     private String password;

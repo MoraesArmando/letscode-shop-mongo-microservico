@@ -11,21 +11,19 @@ import reactor.core.publisher.Mono;
 @Service
 public class ClienteServiceImpl {
 
+    WebClient webClient = WebClient.builder()
+            .baseUrl("http://localhost:3000")
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build();
+
     public Mono<ClienteResponse> getCliente(String identifier) {
-        WebClient webClient = WebClient.builder()
-                .baseUrl("http://localhost:8081")
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
 
-
-         Mono<ClienteResponse> cliente =  webClient
-                .method(HttpMethod.GET)
-                .uri("/cliente/{identifier}", identifier)
+        return  webClient
+                .get()
+                .uri("/v1/cliente/{identifier}", identifier)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
                 .bodyToMono(ClienteResponse.class);
-
-        return  cliente;
-
     }
 
 }

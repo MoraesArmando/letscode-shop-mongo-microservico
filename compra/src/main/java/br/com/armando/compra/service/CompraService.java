@@ -2,7 +2,6 @@ package br.com.armando.compra.service;
 
 import br.com.armando.compra.dto.CompraRequest;
 import br.com.armando.compra.dto.CompraResponse;
-import br.com.armando.compra.model.Compra;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -12,6 +11,6 @@ public interface CompraService {
 
     Mono<CompraResponse> listaCpfPage(String cpf);
 
-    Flux<Compra> listaTodasCompras();
+    Flux<CompraResponse> listaTodasCompras();
 
 }

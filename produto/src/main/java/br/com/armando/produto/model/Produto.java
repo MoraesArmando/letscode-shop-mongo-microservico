@@ -1,7 +1,6 @@
 package br.com.armando.produto.model;
 
 import br.com.armando.produto.dto.ProdutoRequest;
-import br.com.armando.produto.dto.ProdutoResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,14 +24,6 @@ public class Produto {
                 .codigo(produtoRequest.getCodigo())
                 .preco(produtoRequest.getPreco())
                 .quantidade(produtoRequest.getQuantidade())
-                .build();
-    }
-
-    public static Produto converteResponse(ProdutoResponse produtoResponse){
-        return Produto.builder()
-                .codigo(produtoResponse.getCodigo())
-                .preco(produtoResponse.getPreco())
-                .quantidade(produtoResponse.getQuantidade())
                 .build();
     }
 

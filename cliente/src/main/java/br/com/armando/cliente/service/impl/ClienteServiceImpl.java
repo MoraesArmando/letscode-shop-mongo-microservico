@@ -6,16 +6,12 @@ import br.com.armando.cliente.model.Cliente;
 import br.com.armando.cliente.repository.ClienteRepository;
 import br.com.armando.cliente.service.ClienteService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
-@RequestMapping("/cliente")
 public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository clienteRepository;

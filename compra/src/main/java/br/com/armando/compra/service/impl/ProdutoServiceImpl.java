@@ -14,7 +14,7 @@ public class ProdutoServiceImpl {
         WebClient webClient = WebClient.create("http://localhost:8082");
 
         return webClient.get()
-                .uri("/produto/{identifier}", identifier)
+                .uri("/v1/produto/{identifier}", identifier)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
                 .bodyToMono(ProdutoResponse.class)
