@@ -2,10 +2,10 @@ package br.com.armando.compra.service.impl;
 
 import br.com.armando.compra.dto.CompraRequest;
 import br.com.armando.compra.dto.CompraResponse;
+import br.com.armando.compra.repository.CompraRepository;
 import br.com.armando.compra.service.CompraService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class CompraServiceImpl implements CompraService {
     private final SendKafkaMessageImpl sendKafkaMessage;
+    private final CompraRepository compraRepository;
+
 
     @Override
     public Mono<CompraResponse> criarCompra(CompraRequest compraRequest) {
@@ -33,25 +35,13 @@ public class CompraServiceImpl implements CompraService {
     }
 
     @Override
-    public Mono<CompraResponse> listaCpfPage(String cpf) {
-        return null;
+    public Flux<CompraResponse> listaCpfPage(String cpf) {
+        return compraRepository.findByCpf(cpf).map(CompraResponse::convert);
     }
 
     @Override
     public Flux<CompraResponse> listaTodasCompras() {
-        return null;
+        return compraRepository.findAll().map(CompraResponse::convert);
     }
-
-    public static CompraResponse getCompra(String identificador) {
-        WebClient webClient = WebClient.create("http://localhost:80823");
-
-        return webClient
-                .get()
-                .uri("/cliente/{id}", identificador)
-                .retrieve()
-                .bodyToMono(ClienteDTO.class)
-                .block();
-    }
-
 
 }

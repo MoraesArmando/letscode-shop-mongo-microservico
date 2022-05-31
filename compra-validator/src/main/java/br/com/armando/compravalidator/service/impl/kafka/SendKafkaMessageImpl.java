@@ -1,4 +1,4 @@
-package br.com.armando.compravalidator.service.impl;
+package br.com.armando.compravalidator.service.impl.kafka;
 
 import br.com.armando.compravalidator.dto.CompraResponse;
 import lombok.RequiredArgsConstructor;

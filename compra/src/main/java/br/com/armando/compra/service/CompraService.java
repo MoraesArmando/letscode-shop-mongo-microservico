@@ -9,7 +9,7 @@ public interface CompraService {
 
     Mono<CompraResponse> criarCompra(CompraRequest compraRequest);
 
-    Mono<CompraResponse> listaCpfPage(String cpf);
+    Flux<CompraResponse> listaCpfPage(String cpf);
 
     Flux<CompraResponse> listaTodasCompras();
 

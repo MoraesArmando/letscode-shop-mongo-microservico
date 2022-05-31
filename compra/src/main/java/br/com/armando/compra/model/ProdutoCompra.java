@@ -1,4 +1,4 @@
-package br.com.armando.compravalidator.model;
+package br.com.armando.compra.model;
 
 import br.com.armando.compravalidator.dto.ProdutoCompraResponse;
 import lombok.Builder;
