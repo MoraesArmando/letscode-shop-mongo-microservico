@@ -2,6 +2,7 @@ package br.com.armando.compravalidator.service.impl;
 
 import br.com.armando.compravalidator.dto.ClienteResponse;
 import br.com.armando.compravalidator.dto.CompraResponse;
+import br.com.armando.compravalidator.dto.ProdutoCompraResponse;
 import br.com.armando.compravalidator.dto.ProdutoResponse;
 import br.com.armando.compravalidator.service.impl.redis.CacheClienteService;
 import lombok.RequiredArgsConstructor;
@@ -13,39 +14,35 @@ public class CompraValidadorServiceImpl {
 
     private final ClienteServiceImpl clienteService;
     private final ProdutoServiceImpl produtoService;
-
-
     private final CacheClienteService cacheClienteService;
 
 
     public CompraResponse validationCompra(CompraResponse compraResponse){
 
         getClient(compraResponse);
-        Float valorTotal = 0F;
 
-        for (String produto : compraResponse.getCpf()) {
-            ProdutoResponse produtoDTO = ProdutoService.getProduto(produto);
-            if (produtoDTO == null) {
+        Float valorTotal = 0F;
+        for (ProdutoCompraResponse produtoCompraResponse : compraResponse.getProdutoCompra()) {
+            ProdutoResponse produto = produtoService.getProduto(produtoCompraResponse.getCodigoProduto());
+            if (produto == null) {
                 throw new RuntimeException("Produto invalido.");
             }
-            valorTotal += produtoDTO.getPreco();
+            valorTotal += produto.getPreco();
         }
-        compraDTO.setValorTotal(valorTotal);
-        compraDTO.setStatus("PROCESSADA");
+        compraResponse.setValorTotal(valorTotal);
+        compraResponse.setStatus("PROCESSADA");
 
-
+        return compraResponse;
     }
 
     private void getClient(CompraResponse compraResponse) {
         ClienteResponse cliente = cacheClienteService.get(compraResponse.getCpf());
         if (cliente == null) {
-            cliente = ClienteServiceImpl.getCliente(compraResponse.getCpf());
+            cliente = clienteService.getCliente(compraResponse.getCpf());
             if (cliente == null && cliente.getCpf() != null) {
                 throw new RuntimeException("Client not found.");
             }
             cacheClienteService.salvar(cliente);
         }
-
-        Long fim = System.currentTimeMillis();
     }
 }

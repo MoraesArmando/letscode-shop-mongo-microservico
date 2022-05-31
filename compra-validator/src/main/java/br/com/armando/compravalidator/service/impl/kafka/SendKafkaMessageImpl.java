@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SendKafkaMessageImpl {
 
-    public static final String KAFKA_TOPIC = "COMPRA_TOPICO";
+    public static final String KAFKA_TOPIC = "COMPRA_PROCESSADA";
 
     private final KafkaTemplate<String, CompraResponse> kafkaTemplate;
 

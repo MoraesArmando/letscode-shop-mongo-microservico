@@ -1,6 +1,6 @@
 package br.com.armando.compra.model;
 
-import br.com.armando.compravalidator.dto.ProdutoCompraResponse;
+import br.com.armando.compra.dto.ProdutoCompraResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

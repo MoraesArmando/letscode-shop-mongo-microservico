@@ -18,7 +18,7 @@ dbweekend-mongo-express:
     networks:
       - dbweekend
 
-mongo-produto:
+mongo-banco:
     image: mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -27,19 +27,6 @@ mongo-produto:
       - "37017:27017"
 #    volumes:
 #      - /home/armando/Desenvolvimento/Docker/Volumes/Database-Weekend/MongoDB:/data/db
-    networks:
-      - ecommerce-net
-
-
-mongo-usuario:
-    image: mongo
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: MongoDBusuario
-    ports:
-      - "37017:27017"
-#    volumes:
-#      - /home/armadno/Desenvolvimento/Docker/Volumes/Database-Weekend/MongoDB:/data/db
     networks:
       - ecommerce-net
 
@@ -101,8 +88,8 @@ mongo-usuario:
       - POSTGRES_DB=vendas
 
 # API
-  usuario-api:
-    build: ./usuario-api
+  cliente-api:
+    build: ./cliente
     image: usuario-api:latest
     ports:
       - "8083:8083"
@@ -119,7 +106,7 @@ mongo-usuario:
       - SERVER_PORT=8083
 
   produto-api:
-    build: ./produto-api
+    build: ./produto
     image: produto-api:latest
     ports:
       - "8081:8081"
@@ -161,14 +148,14 @@ mongo-usuario:
       - kafka:kafka
 
   vendas-validator:
-    build: ./vendas-validador
+    build: ./compras-validador
     image: compras-validator:latest
     ports:
       - "8082:8082"
     networks:
       - ecommerce-net
     depends_on:
-      - vendas-api
+      - compras-api
       - kafka
     environment:
       - KAFKA_ADDRESS=kafka:9092

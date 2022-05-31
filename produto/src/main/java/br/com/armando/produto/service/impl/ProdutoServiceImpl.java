@@ -18,6 +18,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public Flux<ProdutoResponse> listaProdutos() {
+
         return produtoRepository.findAll().map(ProdutoResponse::converte);
     }
 
