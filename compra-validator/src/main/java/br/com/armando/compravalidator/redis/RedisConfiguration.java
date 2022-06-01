@@ -1,4 +1,4 @@
-package br.com.armando.compravalidator.config;
+package br.com.armando.compravalidator.redis;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

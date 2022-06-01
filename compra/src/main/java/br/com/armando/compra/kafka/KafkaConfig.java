@@ -1,6 +1,6 @@
-package br.com.armando.compravalidator.config;
+package br.com.armando.compra.kafka;
 
-import br.com.armando.compravalidator.dto.CompraResponse;
+import br.com.armando.compra.dto.CompraResponse;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -35,10 +35,8 @@ public class KafkaConfig {
         return new KafkaTemplate<>(producerFactory());
     }
 
-
-    public ConsumerFactory<String, CompraResponse> consumerFactory() {
+    public ConsumerFactory<String,CompraResponse> consumerFactory(){
         JsonDeserializer<CompraResponse> deserializer = new JsonDeserializer<>(CompraResponse.class);
-        deserializer.addTrustedPackages("*");
 
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaAddress);
@@ -46,11 +44,11 @@ public class KafkaConfig {
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), deserializer);
     }
 
-
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, CompraResponse> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, CompraResponse> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, CompraResponse> kafkaListenerContainerFactory(){
+        ConcurrentKafkaListenerContainerFactory<String , CompraResponse> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
+
 }

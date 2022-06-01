@@ -1,4 +1,4 @@
-package br.com.armando.compra.service.impl;
+package br.com.armando.compra.kafka;
 
 import br.com.armando.compra.dto.CompraResponse;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SendKafkaMessageImpl {
 
-    public static final String KAFKA_TOPIC = "COMPRA_TOPICO";
+    private static final String KAFKA_TOPIC = "COMPRA_TOPICO";
     private final KafkaTemplate<String, CompraResponse> kafkaTemplate;
 
     public void sendMenssage(CompraResponse compraResponse){

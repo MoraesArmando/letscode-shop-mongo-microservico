@@ -1,4 +1,4 @@
-package br.com.armando.compravalidator.service.impl.redis;
+package br.com.armando.compravalidator.redis;
 
 import br.com.armando.compravalidator.dto.ProdutoResponse;
 import lombok.RequiredArgsConstructor;

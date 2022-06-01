@@ -1,6 +1,6 @@
-package br.com.armando.compra.config;
+package br.com.armando.compravalidator.kafka;
 
-import br.com.armando.compra.dto.CompraResponse;
+import br.com.armando.compravalidator.dto.CompraResponse;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -22,21 +22,22 @@ public class KafkaConfig {
     @Value("${kafka.config.address}")
     private String kafkaAddress;
 
-    public ProducerFactory<String, CompraResponse> producerFactory(){
+    public ProducerFactory<String, CompraResponse> producerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,kafkaAddress);
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaAddress);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new DefaultKafkaProducerFactory<>(props);
     }
 
     @Bean
-    public KafkaTemplate<String, CompraResponse> kafkaTemplate(){
+    public KafkaTemplate<String, CompraResponse> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
-    public ConsumerFactory<String,CompraResponse> consumerFactory(){
+    public ConsumerFactory<String, CompraResponse> consumerFactory() {
         JsonDeserializer<CompraResponse> deserializer = new JsonDeserializer<>(CompraResponse.class);
+        deserializer.addTrustedPackages("*");
 
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaAddress);
@@ -45,10 +46,9 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, CompraResponse> kafkaListenerContainerFactory(){
-        ConcurrentKafkaListenerContainerFactory<String , CompraResponse> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, CompraResponse> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, CompraResponse> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
-
 }

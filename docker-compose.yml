@@ -8,27 +8,27 @@ dbweekend-mongo-express:
     ports:
       - 19081:8081
     environment:
-      ME_CONFIG_BASICAUTH_USERNAME: renatogroffe
-      ME_CONFIG_BASICAUTH_PASSWORD: MongoExpress2019!
+      ME_CONFIG_BASICAUTH_USERNAME: moraesarmando
+      ME_CONFIG_BASICAUTH_PASSWORD: MongoExpress2022!
       ME_CONFIG_MONGODB_PORT: 27017
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: MongoDB2019!
+      ME_CONFIG_MONGODB_ADMINPASSWORD: MongoDB2022!
     links:
       - mongo
     networks:
-      - dbweekend
+      - ecommerce-net
 
-mongo-banco:
+mongodb-produto:
     image: mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: MongoDBproduto
+      MONGO_INITDB_ROOT_PASSWORD: MongoDB
+      MONGO_INITDB_DATABASE:produto
     ports:
-      - "37017:27017"
-#    volumes:
-#      - /home/armando/Desenvolvimento/Docker/Volumes/Database-Weekend/MongoDB:/data/db
+      - 37017:27017
     networks:
       - ecommerce-net
+
 
  zookeeper:
 #    container_name: zookeeper
@@ -76,93 +76,83 @@ mongo-banco:
       - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
 
-  postgres-compose:
-    image: postgres
-    ports:
-      - "5432:5432"
-    networks:
-      - ecommerce-net
-    environment:
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=vendas
 
-# API
-  cliente-api:
-    build: ./cliente
-    image: usuario-api:latest
-    ports:
-      - "8083:8083"
-    depends_on:
-      - mongo-banco
-    networks:
-      - ecommerce-net
-    links:
-      - mongo-banco
-    environment:
-      - SPRING_DATA_MONGODB_HOST=mongo-banco
-      - SPRING_DATA_MONGODB_PORT=27017
-      - SPRING_DATASOURCE_PASSWORD=root
-      - SERVER_PORT=8083
+# # API
+#   usuario-api:
+#     build: ./cliente
+#     image: usuario-0.1:latest
+#     ports:
+#       - "8082:8082"
+#     depends_on:
+#       - mongo-banco
+#     networks:
+#       - ecommerce-net
+#     links:
+#       - mongo-banco
+#     environment:
+#       - SPRING_DATA_MONGODB_HOST=mongo-banco
+#       - SPRING_DATA_MONGODB_PORT=27017
+#       - SPRING_DATASOURCE_PASSWORD=root
+#       - SERVER_PORT=8083
 
-  produto-api:
-    build: ./produto
-    image: produto-api:latest
-    ports:
-      - "8081:8081"
-    networks:
-      - ecommerce-net
-    depends_on:
-      - postgres-compose
-      - redis-compose
-    environment:
-      - DB_SERVER=postgres-compose
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=produtos
-      - SPRING_REDIS_HOST=redis-compose
-      - SPRING_REDIS_PORT=6379
-    links:
-      - postgres-compose
-      - redis-compose
+#   produto-api:
+#     build: ./produto
+#     image: produto-0.1:latest
+#     ports:
+#       - "8081:8081"
+#     networks:
+#       - ecommerce-net
+#     depends_on:
+#       - postgres-compose
+#       - redis-compose
+#     environment:
+#       - DB_SERVER=postgres-compose
+#       - POSTGRES_PASSWORD=admin
+#       - POSTGRES_USER=postgres
+#       - POSTGRES_DB=produtos
+#       - SPRING_REDIS_HOST=redis-compose
+#       - SPRING_REDIS_PORT=6379
+#     links:
+#       - postgres-compose
+#       - redis-compose
 
-  compras-api:
-    build: ./vendas-api
-    image: vendas-api:latest
-    ports:
-      - "8080:8080"
-    networks:
-      - ecommerce-net
-    depends_on:
-      - mongo-banco
-      - vendas-validator
-      - kafka
-    environment:
-      - SPRING_DATA_MONGODB_HOST=mongo-banco
-      - SPRING_DATA_MONGODB_PORT=27017
-      - SPRING_DATASOURCE_PASSWORD=root
-      - SERVER_PORT=8080
-      - KAFKA_ADDRESS=kafka:9092
-    links:
-      - mongo-banco
-      - kafka:kafka
+#   compras-api:
+#     build: ./compra
+#     image: vendas-0.1:latest
+#     ports:
+#       - "8080:8080"
+#     networks:
+#       - ecommerce-net
+#     depends_on:
+#       - mongo-banco
+#       - vendas-validator
+#       - kafka
+#     environment:
+#       - SPRING_DATA_MONGODB_HOST=mongo-banco
+#       - SPRING_DATA_MONGODB_PORT=27017
+#       - SPRING_DATASOURCE_PASSWORD=root
+#       - SERVER_PORT=8080
+#       - KAFKA_ADDRESS=kafka:9092
+#     links:
+#       - mongo-banco
+#       - kafka:kafka
 
-  vendas-validator:
-    build: ./compras-validador
-    image: compras-validator:latest
-    ports:
-      - "8082:8082"
-    networks:
-      - ecommerce-net
-    depends_on:
-      - compras-api
-      - kafka
-    environment:
-      - KAFKA_ADDRESS=kafka:9092
-      - WEBCLIENT_URL=http://produto-api:8081
-    links:
-      - produto-api:produto-api
-      - kafka:kafka 
+#   compra-validator:
+#     build: ./compra-validador
+#     image: comprasvalidator-0.1:latest
+#     ports:
+#       - "8082:8082"
+#     networks:
+#       - ecommerce-net
+#     depends_on:
+#       - vendas-api
+#       - kafka
+#     environment:
+#       - KAFKA_ADDRESS=kafka:9092
+#       - WEBCLIENT_URL=http://produto-api:8081
+#     links:
+#       - produto-api:produto-api
+#       - kafka:kafka 
 
 networks:
   ecommerce-net:

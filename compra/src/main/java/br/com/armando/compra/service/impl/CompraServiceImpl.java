@@ -2,11 +2,10 @@ package br.com.armando.compra.service.impl;
 
 import br.com.armando.compra.dto.CompraRequest;
 import br.com.armando.compra.dto.CompraResponse;
-import br.com.armando.compra.repository.CompraRepository;
+import br.com.armando.compra.kafka.SendKafkaMessageImpl;
 import br.com.armando.compra.service.CompraService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -15,7 +14,6 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class CompraServiceImpl implements CompraService {
     private final SendKafkaMessageImpl sendKafkaMessage;
-    private final CompraRepository compraRepository;
 
 
     @Override
@@ -31,17 +29,8 @@ public class CompraServiceImpl implements CompraService {
 
         sendKafkaMessage.sendMenssage(compraResponse);
 
-        return null;
+        return Mono.just(compraResponse);
     }
 
-    @Override
-    public Flux<CompraResponse> listaCpfPage(String cpf) {
-        return compraRepository.findByCpf(cpf).map(CompraResponse::convert);
-    }
-
-    @Override
-    public Flux<CompraResponse> listaTodasCompras() {
-        return compraRepository.findAll().map(CompraResponse::convert);
-    }
 
 }
