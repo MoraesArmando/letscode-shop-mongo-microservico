@@ -1,0 +1,35 @@
+global:
+  scrape_interval: 15s
+
+rule_files:
+#  - first.rules
+
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'localhost:9090' ]
+
+  - job_name: 'produto-api'
+    metrics_path: '/actuator/prometheus' # Como obter as métricas
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'produto-api:8085' ]
+
+  - job_name: 'cliente-api'
+    metrics_path: '/actuator/prometheus' # Como obter as métricas
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'cliente-api:8086' ]
+
+  - job_name: 'compra-api'
+    metrics_path: '/actuator/prometheus' # Como obter as métricas
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'compra-api:8087' ]
+
+  - job_name: 'compra-validator-api'
+    metrics_path: '/actuator/prometheus' # Como obter as métricas
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'compra-validator-api:8088' ]

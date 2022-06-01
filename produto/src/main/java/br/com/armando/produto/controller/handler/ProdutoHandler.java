@@ -15,7 +15,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @Component
 public class ProdutoHandler {
-
     private final ProdutoServiceImpl produtoService;
 
     public Mono<ServerResponse> criaProduto(ServerRequest request) {

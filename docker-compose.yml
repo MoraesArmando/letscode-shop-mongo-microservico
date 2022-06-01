@@ -6,7 +6,7 @@ services:
       - 8081:8081
     depends_on:
       - mongodb
-     links:
+    links:
       - mongodb
     networks:
       - ecommerce-net
@@ -16,7 +16,7 @@ services:
       ME_CONFIG_MONGODB_PORT: 27017
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: MongoDB2022!
-   
+
 
   mongodb:
     image: mongo
@@ -47,11 +47,11 @@ services:
     restart: always
     ports:
       - "9092:9092"
-     depends_on:
+    depends_on:
       - zookeeper
     links:
       - zookeeper:zookeeper
-       networks:
+    networks:
       - ecommerce-net
     environment:
       - KAFKA_BROKER_ID=1
@@ -74,13 +74,50 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
 
+  prometheus:
+    image: prom/prometheus:v2.35.0
+    depends_on:
+      - app-example
+    networks:
+      - ecommerce-net
+    ports:
+      - "9090:9090"
+    restart: always
+    command: --config.file=/prometheus.yml
 
-# API
+  grafana:
+    image: grafana/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    networks:
+      - ecommerce-net
+
+  produto-api:
+    build: ./produto
+    image: produto:latest
+    ports:
+      - "8085:8085"
+    networks:
+      - ecommerce-net
+    depends_on:
+      - mongodb
+    environment:
+      - SPRING_DATA_MONGODB_HOST=mongodb
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATASOURCE_PASSWORD=root
+    links:
+      - mongodb
+      - redis-compose
+
   cliente-api:
     build: ./cliente
     image: cliente:latest
     ports:
-      - "8085:8085"
+      - "8086:8086"
     depends_on:
       - mongodb
     networks:
@@ -93,25 +130,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=root
       - SERVER_PORT=8083
 
-
-  produto-api:
-    build: ./produto
-    image: produto:latest
-    ports:
-      - "8086:8086"
-    networks:
-      - ecommerce-net
-    depends_on:
-      - mongodb
-    environment:
-      - SPRING_DATA_MONGODB_HOST=mongodb
-      - SPRING_DATA_MONGODB_PORT=27017
-      - SPRING_DATASOURCE_PASSWORD=root
-    links:
-      - mongodb
-      - redis-compose
-
-
   compra-api:
     build: ./compra
     image: compra:latest
@@ -120,7 +138,6 @@ services:
     networks:
       - ecommerce-net
     depends_on:
-      - mongodb
       - kafka
     environment:
       - SERVER_PORT=8080
@@ -128,16 +145,17 @@ services:
     links:
       - kafka:kafka
 
-
-  compra-validator:
-    build: ./compra-validador
+  compra-validator-api:
+    build: ./compra-validator
     image: comprasvalidator:latest
     ports:
       - "8088:8088"
     networks:
       - ecommerce-net
     depends_on:
-      - compras-api
+      - compra-api
+      - produto-api
+      - cliente-api
       - kafka
       - redis-compose
       - mongodb
@@ -150,9 +168,8 @@ services:
       - WEBCLIENT_CLIENTE_URL=http://cliente-api:8085
     links:
       - produto-api:produto-api
-      - kafka:kafka 
+      - kafka:kafka
       - mongodb
-
 
 networks:
   ecommerce-net:
